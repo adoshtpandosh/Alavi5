@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>??? ?????? - ????? ?????? ????</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.tailwindcss.com/dist/tailwind.min.css">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/css/pluginsCss.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/plugins.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/css/luckysheet.css">
+</head>
+<body class="bg-slate-50 font-vazir">
+<script>if(!localStorage.getItem('admin')) location.href='login.html';</script>
+
+<header class="bg-purple-600 text-white p-4 shadow">
+  <h1 class="text-xl font-bold">??? ?????? ??????? ? ?????? ??</h1>
+</header>
+
+<main class="container mx-auto p-4 space-y-8">
+  <div id="luckysheet" class="w-full h-[70vh] border rounded"></div>
+  <div class="text-center">
+    <button onclick="saveExcel()" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">????? ????</button>
+  </div>
+
+  <section class="bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-bold mb-3 text-purple-700">?????? ??? «?????? ??»</h2>
+    <textarea id="about-editor" rows="6" class="w-full border rounded p-2 text-sm"></textarea>
+    <button onclick="saveAbout()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">????? ???</button>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/js/plugin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/luckysheet.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+let fileName='../data/products.xlsx';
+fetch(fileName)
+  .then(r=>r.arrayBuffer())
+  .then(ab=>{
+      const wb=XLSX.read(ab,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const json=XLSX.utils.sheet_to_json(ws,{header:1});
+      luckysheet.create({container:'luckysheet',data:[luckysheet.transToLuckyData(json)]});
+  });
+
+function saveExcel(){
+  const json=luckysheet.getAllSheets()[0].data.map(r=>r.map(c=>c?.v||''));
+  const ws=XLSX.utils.aoa_to_sheet(json);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
+  const blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/octet-stream'});
+  const form=new FormData(); form.append('file',blob,'products.xlsx');
+  fetch('../api/save-excel.php',{method:'POST',body:form})
+    .then(r=>r.json())
+    .then(res=>alert(res.message));
+}
+
+fetch('../data/about.txt')
+  .then(r=>r.text())
+  .then(t=>document.getElementById('about-editor').value=t);
+
+function saveAbout(){
+  const text=document.getElementById('about-editor').value;
+  fetch('../api/save-about.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'text='+encodeURIComponent(text)
+  })
+  .then(r=>r.json())
+  .then(res=>alert(res.message));
+}
+</script>
+</body>
+</html>

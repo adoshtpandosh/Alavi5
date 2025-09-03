@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>???? ?? ??? ??????</title>
+  <link rel="stylesheet" href="https://cdn.tailwindcss.com/dist/tailwind.min.css">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+</head>
+<body class="bg-slate-100 flex items-center justify-center h-screen">
+  <form class="bg-white p-8 rounded-xl shadow space-y-4" onsubmit="login(event)">
+    <h1 class="text-xl font-bold text-center">???? ????</h1>
+    <input id="pass" type="password" placeholder="??? ????" required class="border px-3 py-2 rounded w-full">
+    <button class="bg-purple-600 text-white w-full py-2 rounded">????</button>
+  </form>
+  <script>
+  async function login(e){
+    e.preventDefault();
+    const res=await fetch('../api/config.php',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({pass:document.getElementById('pass').value})
+    });
+    const data=await res.json();
+    if(data.success){
+      localStorage.setItem('admin','1');
+      location.href='dashboard.html';
+    }else{
+      alert('??? ?????? ???');
+    }
+  }
+  </script>
+</body>
+</html>

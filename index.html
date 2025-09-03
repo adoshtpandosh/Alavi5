@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>دنیای سیلندر علوی</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- TailwindCSS & Vazir Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>body{font-family:Vazir,system-ui;}</style>
+</head>
+
+<body class="bg-slate-50">
+<header class="bg-purple-600 text-white p-4 shadow flex justify-between items-center">
+  <h1 class="text-2xl font-bold">دنیای سیلندر علوی</h1>
+  <button onclick="openAbout()" class="text-sm hover:underline">درباره ما</button>
+</header>
+
+<main class="container mx-auto p-4 max-w-5xl">
+  <!-- Chat Bot -->
+  <section id="chat" class="max-w-2xl mx-auto bg-white rounded-xl shadow p-4 mb-8">
+    <div id="chat-messages" class="h-96 overflow-y-auto border-b mb-3 p-2 space-y-2 text-sm"></div>
+    <div class="flex gap-2">
+      <input id="chat-input" type="text" placeholder="مثال: سیلندر ۴۰۵ یا سمند EF7" class="flex-grow border rounded px-3 py-2">
+      <button onclick="sendMessage()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">ارسال</button>
+    </div>
+  </section>
+
+  <!-- Product Detail Modal -->
+  <div id="product-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full text-right relative">
+      <button onclick="closeModal()" class="absolute left-4 top-2 text-gray-500 text-3xl leading-none">&times;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Quick Order Form -->
+  <section class="max-w-xl mx-auto bg-white rounded-xl shadow p-6">
+    <h2 class="text-xl font-bold mb-4">ثبت سریع سفارش</h2>
+    <form id="order-form" onsubmit="sendOrder(event)">
+      <input name="name"  placeholder="نام و نام خانوادگی" required class="block w-full mb-3 border rounded px-3 py-2">
+      <input name="phone" placeholder="شماره تماس" required class="block w-full mb-3 border rounded px-3 py-2" type="tel">
+      <input name="city"  placeholder="شهر" required class="block w-full mb-3 border rounded px-3 py-2">
+      <input name="product" placeholder="نام محصول مورد نظر" required class="block w-full mb-3 border rounded px-3 py-2">
+
+      <label class="block mb-1 text-sm font-medium">ارسال از طریق:</label>
+      <select id="platform" class="block w-full mb-4 border rounded px-3 py-2">
+        <option value="wa">واتس‌اپ</option>
+        <option value="tg">تلگرام</option>
+        <option value="rub">روبیکا</option>
+      </select>
+
+      <button type="submit" class="bg-purple-600 text-white w-full py-2 rounded hover:bg-purple-700">ثبت سفارش</button>
+    </form>
+  </section>
+</main>
+
+<!-- درباره ما - مودال -->
+<div id="about-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl p-6 max-w-md w-full text-right relative">
+    <button onclick="closeAbout()" class="absolute left-4 top-2 text-gray-500 text-3xl leading-none">&times;</button>
+    <h3 class="text-lg font-bold mb-3 text-purple-700">درباره ما</h3>
+    <div id="about-content" class="text-sm text-gray-700 leading-6"></div>
+  </div>
+</div>
+
+<!-- کتابخانه‌های خارجی -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
