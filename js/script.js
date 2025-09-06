@@ -4,7 +4,7 @@
 let products = [];
 
 /* ---------- بارگذاری JSON ---------- */
-fetch('data/products.json')
+fetch('data/products.js?v=2.1')
   .then(r => r.json())
   .then(json => {
     products = json;
@@ -12,7 +12,7 @@ fetch('data/products.json')
   });
 
 /* ---------- بارگذاری درباره‌ما ---------- */
-fetch('data/about.txt')
+fetch('data/about.txt?v=2.1')
   .then(r => r.text())
   .then(t => { document.getElementById('about-content').textContent = t; });
 
@@ -50,16 +50,18 @@ function quickSearch(key) {
   sendMessage();
 }
 
-/* ---------- جستجوی هوشمند (در name، model، description) ---------- */
+/* ---------- جستجوی هوشمند (همه‌کلمه‌ای + نرمال‌سازی فارسی) ---------- */
 function sendMessage() {
   const inp = document.getElementById('chat-input');
-  const q = inp.value.trim().toLowerCase();
+  let q = inp.value.trim().toLowerCase();
+  /* نرمال‌سازی حروف فارسی/عربی و کش */
+  q = q.replace(/ي/g, 'ی').replace(/ك/g, 'ک');
   if (!q) return;
 
   appendChat('user', `<b>شما:</b> ${inp.value}`);
   inp.value = '';
 
-  /* جستجو در تمام فیلدها */
+  /* جستجو در name، model و description */
   const found = products.filter(r =>
     r.name.toLowerCase().includes(q) ||
     r.model.toLowerCase().includes(q) ||
@@ -67,7 +69,6 @@ function sendMessage() {
   );
 
   if (found.length) {
-    /* گروه‌بندی بر اساس name+model برای نمایش توضیح تفاوت قیمت */
     const groups = {};
     found.forEach(r => {
       const key = `${r.name} (${r.model})`;
