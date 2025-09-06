@@ -4,9 +4,12 @@
 let products = [];
 
 /* ---------- بارگذاری JSON ---------- */
-fetch('data/products.json')          // ← بدون اسلش
+fetch('data/products.json')
   .then(r => r.json())
-  .then(json => { products = json; });
+  .then(json => {
+    products = json;
+    sendWelcome();          // ← خوش‌آمدگویی اولیه
+  });
 
 /* ---------- بارگذاری درباره‌ما ---------- */
 fetch('data/about.txt')
@@ -23,6 +26,28 @@ function appendChat(role, html) {
     : html;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
+}
+
+/* ---------- خوش‌آمدگویی اولیه ---------- */
+function sendWelcome() {
+  if (document.getElementById('chat-messages').children.length === 0) {
+    appendChat('bot', `
+      سلام 👋 به دنیای سیلندر علوی خوش اومدین!<br>
+      چه چیزی نیاز دارید؟
+      <div class="mt-2 flex flex-wrap gap-2">
+        <button onclick="quickSearch('موتور ۴۰۵')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">موتور ۴۰۵</button>
+        <button onclick="quickSearch('نیسان')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">نیسان</button>
+        <button onclick="quickSearch('۲۰۶')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">پژو ۲۰۶</button>
+        <button onclick="quickSearch('پراید')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">پراید</button>
+      </div>
+    `);
+  }
+}
+
+/* ---------- جستجوی سریع با کلیک روی دکمه ---------- */
+function quickSearch(key) {
+  document.getElementById('chat-input').value = key;
+  sendMessage();
 }
 
 /* ---------- جستجوی هوشمند ---------- */
