@@ -4,12 +4,12 @@
 let products = [];
 
 /* ---------- بارگذاری JSON ---------- */
-fetch('data/products.json')
+fetch('data/products.json')          // ← بدون اسلش
   .then(r => r.json())
-  .then(json => { products = json.slice(1); }); // حذف هدر
+  .then(json => { products = json; }) // ← دیگر slice نمی‌خواهد
 
 /* ---------- بارگذاری درباره‌ما ---------- */
-fetch('data/about.txt')
+fetch('data/about.txt')              // ← بدون اسلش
   .then(r => r.text())
   .then(t => { document.getElementById('about-content').textContent = t; });
 
@@ -34,21 +34,19 @@ function sendMessage() {
   appendChat('user', `<b>شما:</b> ${inp.value}`);
   inp.value = '';
 
-  // جستجوی دقیق یا fuzzy در JSON
   const found = products.filter(r =>
-    r[0].toLowerCase().includes(q) ||
-    r[1].toLowerCase().includes(q)
+    r.name.toLowerCase().includes(q) ||
+    r.model.toLowerCase().includes(q)
   );
 
   if (found.length) {
     found.forEach(r => {
-      const [name, model, price, desc] = r;
       appendChat('bot', `
         <div class="flex items-start gap-3">
           <div>
-            <b>${name} (${model})</b><br>${desc}<br>
-            <span class="text-purple-600 font-bold">${price}</span>
-            <button onclick="openModal('${name}','${model}','${price}')" class="text-xs underline ml-2">سفارش</button>
+            <b>${r.name} (${r.model})</b><br>${r.description}<br>
+            <span class="text-purple-600 font-bold">${r.price}</span>
+            <button onclick="openModal('${r.name}','${r.model}','${r.price}')" class="text-xs underline ml-2">سفارش</button>
           </div>
         </div>
       `);
