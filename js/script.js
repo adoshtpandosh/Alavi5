@@ -6,10 +6,10 @@ let products = [];
 /* ---------- بارگذاری JSON ---------- */
 fetch('data/products.json')          // ← بدون اسلش
   .then(r => r.json())
-  .then(json => { products = json; }) // ← دیگر slice نمی‌خواهد
+  .then(json => { products = json; });
 
 /* ---------- بارگذاری درباره‌ما ---------- */
-fetch('data/about.txt')              // ← بدون اسلش
+fetch('data/about.txt')
   .then(r => r.text())
   .then(t => { document.getElementById('about-content').textContent = t; });
 
@@ -56,7 +56,7 @@ function sendMessage() {
   }
 }
 
-/* ---------- مودال ---------- */
+/* ---------- مودال محصول ---------- */
 function openModal(n, d, p, i) {
   document.getElementById('modal-content').innerHTML = `
     ${i ? `<img src="${i}" class="w-full rounded mb-2">` : ''}
@@ -68,6 +68,14 @@ function openModal(n, d, p, i) {
 }
 function closeModal() {
   document.getElementById('product-modal').classList.add('hidden');
+}
+
+/* ---------- مودال درباره‌ما ---------- */
+function openAbout() {
+  document.getElementById('about-modal').classList.remove('hidden');
+}
+function closeAbout() {
+  document.getElementById('about-modal').classList.add('hidden');
 }
 
 /* ---------- ارسال سفارش ---------- */
