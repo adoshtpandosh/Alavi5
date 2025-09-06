@@ -8,7 +8,7 @@ fetch('data/products.json')
   .then(r => r.json())
   .then(json => {
     products = json;
-    sendWelcome();          // ← خوش‌آمدگویی اولیه
+    sendWelcome();
   });
 
 /* ---------- بارگذاری درباره‌ما ---------- */
@@ -50,7 +50,7 @@ function quickSearch(key) {
   sendMessage();
 }
 
-/* ---------- جستجوی هوشمند ---------- */
+/* ---------- جستجوی هوشمند (در name، model، description) ---------- */
 function sendMessage() {
   const inp = document.getElementById('chat-input');
   const q = inp.value.trim().toLowerCase();
@@ -59,22 +59,33 @@ function sendMessage() {
   appendChat('user', `<b>شما:</b> ${inp.value}`);
   inp.value = '';
 
+  /* جستجو در تمام فیلدها */
   const found = products.filter(r =>
     r.name.toLowerCase().includes(q) ||
-    r.model.toLowerCase().includes(q)
+    r.model.toLowerCase().includes(q) ||
+    r.description.toLowerCase().includes(q)
   );
 
   if (found.length) {
+    /* گروه‌بندی بر اساس name+model برای نمایش توضیح تفاوت قیمت */
+    const groups = {};
     found.forEach(r => {
-      appendChat('bot', `
-        <div class="flex items-start gap-3">
-          <div>
-            <b>${r.name} (${r.model})</b><br>${r.description}<br>
-            <span class="text-purple-600 font-bold">${r.price}</span>
-            <button onclick="openModal('${r.name}','${r.model}','${r.price}')" class="text-xs underline ml-2">سفارش</button>
+      const key = `${r.name} (${r.model})`;
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(r);
+    });
+
+    Object.entries(groups).forEach(([key, items]) => {
+      items.forEach(r => {
+        const desc = r.description ? ` - ${r.description}` : '';
+        appendChat('bot', `
+          <div class="mb-2">
+            <b>${key}</b>${desc}<br>
+            <span class="text-purple-600 font-bold">${Number(r.price).toLocaleString('fa')} تومان</span>
+            <button onclick="openModal('${r.name}','${r.model}','${r.price}','${r.description}')" class="text-xs underline ml-2">سفارش</button>
           </div>
-        </div>
-      `);
+        `);
+      });
     });
   } else {
     appendChat('bot', 'محصولی یافت نشد. لطفاً با ۰۹۳۷۰۷۶۹۱۹۱ یا ۰۹۹۲۱۳۵۲۰۸۸ تماس بگیرید.');
@@ -87,7 +98,7 @@ function openModal(n, d, p, i) {
     ${i ? `<img src="${i}" class="w-full rounded mb-2">` : ''}
     <h3 class="text-lg font-bold">${n}</h3>
     <p class="text-sm">${d}</p>
-    <p class="text-purple-600 font-bold">${p}</p>
+    <p class="text-purple-600 font-bold">${Number(p).toLocaleString('fa')} تومان</p>
   `;
   document.getElementById('product-modal').classList.remove('hidden');
 }
