@@ -4,7 +4,7 @@
 let products = [];
 
 /* ---------- بارگذاری JSON ---------- */
-fetch('data/products.js?v=2.1')
+fetch('data/products.jsonon?v=2.1')
   .then(r => r.json())
   .then(json => {
     products = json;
