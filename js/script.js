@@ -4,7 +4,7 @@
 let products = [];
 
 /* ---------- بارگذاری JSON ---------- */
-fetch('data/products.jsonon?v=2.1')
+fetch('data/products.json?v=2.1')
   .then(r => r.json())
   .then(json => {
     products = json;
@@ -54,14 +54,12 @@ function quickSearch(key) {
 function sendMessage() {
   const inp = document.getElementById('chat-input');
   let q = inp.value.trim().toLowerCase();
-  /* نرمال‌سازی حروف فارسی/عربی و کش */
   q = q.replace(/ي/g, 'ی').replace(/ك/g, 'ک');
   if (!q) return;
 
   appendChat('user', `<b>شما:</b> ${inp.value}`);
   inp.value = '';
 
-  /* جستجو در name، model و description */
   const found = products.filter(r =>
     r.name.toLowerCase().includes(q) ||
     r.model.toLowerCase().includes(q) ||
