@@ -1,4 +1,44 @@
-/* global XMLHttpRequest */
+/* ---------- جستجوی هوشمند (جزئی‌واژه + نرمال‌سازی فارسی) ---------- */
+function sendMessage() {
+  const inp = document.getElementById('chat-input');
+  let q = inp.value.trim().toLowerCase();
+  /* نرمال‌سازی ی/ي و ك/ک */
+  q = q.replace(/ي/g, 'ی').replace(/ك/g, 'ک');
+  if (!q) return;
+
+  appendChat('user', `<b>شما:</b> ${inp.value}`);
+  inp.value = '';
+
+  /* هر کلمه‌ی ورودی باید در نام+مدل+توضیح پیدا بشه (AND منطقی) */
+  const found = products.filter(r => {
+    const hay = (r.name + ' ' + r.model + ' ' + r.description).toLowerCase();
+    return q.split(' ').every(word => hay.includes(word));
+  });
+
+  if (found.length) {
+    const groups = {};
+    found.forEach(r => {
+      const key = `${r.name} (${r.model})`;
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(r);
+    });
+
+    Object.entries(groups).forEach(([key, items]) => {
+      items.forEach(r => {
+        const desc = r.description ? ` - ${r.description}` : '';
+        appendChat('bot', `
+          <div class="mb-2">
+            <b>${key}</b>${desc}<br>
+            <span class="text-purple-600 font-bold">${Number(r.price).toLocaleString('fa')} تومان</span>
+            <button onclick="openModal('${r.name}','${r.model}','${r.price}','${r.description}')" class="text-xs underline ml-2">سفارش</button>
+          </div>
+        `);
+      });
+    });
+  } else {
+    appendChat('bot', 'محصولی یافت نشد. لطفاً با ۰۹۳۷۰۷۶۹۱۹۱ یا ۰۹۹۲۱۳۵۲۰۸۸ تماس بگیرید.');
+  }
+}/* global XMLHttpRequest */
 /* exported sendMessage, openModal, closeModal, sendOrder, openAbout, closeAbout */
 
 let products = [];
