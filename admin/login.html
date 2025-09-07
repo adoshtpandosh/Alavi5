@@ -2,30 +2,34 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <title>???? ?? ??? ??????</title>
-  <link rel="stylesheet" href="https://cdn.tailwindcss.com/dist/tailwind.min.css">
-  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+  <title>ورود به پنل ادمین</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/vazir.css">
+  <style>body{font-family:Vazir,system-ui;}</style>
 </head>
+
 <body class="bg-slate-100 flex items-center justify-center h-screen">
   <form class="bg-white p-8 rounded-xl shadow space-y-4" onsubmit="login(event)">
-    <h1 class="text-xl font-bold text-center">???? ????</h1>
-    <input id="pass" type="password" placeholder="??? ????" required class="border px-3 py-2 rounded w-full">
-    <button class="bg-purple-600 text-white w-full py-2 rounded">????</button>
+    <h1 class="text-xl font-bold text-center">ورود ادمین</h1>
+    <input id="pass" type="password" placeholder="رمز عبور" required class="border px-3 py-2 rounded w-full">
+    <button class="bg-purple-600 text-white w-full py-2 rounded">ورود</button>
   </form>
+
   <script>
   async function login(e){
     e.preventDefault();
-    const res=await fetch('../api/config.php',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({pass:document.getElementById('pass').value})
+    const res = await fetch('../api/config.php',{
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({pass: document.getElementById('pass').value})
     });
-    const data=await res.json();
-    if(data.success){
+    const data = await res.json();
+    if (data.success) {
       localStorage.setItem('admin','1');
-      location.href='dashboard.html';
-    }else{
-      alert('??? ?????? ???');
+      location.href = 'dashboard.html';
+    } else {
+      alert('رمز عبور اشتباه است');
     }
   }
   </script>
