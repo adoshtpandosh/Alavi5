@@ -1,44 +1,4 @@
-/* ---------- جستجوی هوشمند (جزئی‌واژه + نرمال‌سازی فارسی) ---------- */
-function sendMessage() {
-  const inp = document.getElementById('chat-input');
-  let q = inp.value.trim().toLowerCase();
-  /* نرمال‌سازی ی/ي و ك/ک */
-  q = q.replace(/ي/g, 'ی').replace(/ك/g, 'ک');
-  if (!q) return;
-
-  appendChat('user', `<b>شما:</b> ${inp.value}`);
-  inp.value = '';
-
-  /* هر کلمه‌ی ورودی باید در نام+مدل+توضیح پیدا بشه (AND منطقی) */
-  const found = products.filter(r => {
-    const hay = (r.name + ' ' + r.model + ' ' + r.description).toLowerCase();
-    return q.split(' ').every(word => hay.includes(word));
-  });
-
-  if (found.length) {
-    const groups = {};
-    found.forEach(r => {
-      const key = `${r.name} (${r.model})`;
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(r);
-    });
-
-    Object.entries(groups).forEach(([key, items]) => {
-      items.forEach(r => {
-        const desc = r.description ? ` - ${r.description}` : '';
-        appendChat('bot', `
-          <div class="mb-2">
-            <b>${key}</b>${desc}<br>
-            <span class="text-purple-600 font-bold">${Number(r.price).toLocaleString('fa')} تومان</span>
-            <button onclick="openModal('${r.name}','${r.model}','${r.price}','${r.description}')" class="text-xs underline ml-2">سفارش</button>
-          </div>
-        `);
-      });
-    });
-  } else {
-    appendChat('bot', 'محصولی یافت نشد. لطفاً با ۰۹۳۷۰۷۶۹۱۹۱ یا ۰۹۹۲۱۳۵۲۰۸۸ تماس بگیرید.');
-  }
-}/* global XMLHttpRequest */
+/* global XMLHttpRequest */
 /* exported sendMessage, openModal, closeModal, sendOrder, openAbout, closeAbout */
 
 let products = [];
@@ -75,10 +35,10 @@ function sendWelcome() {
       سلام 👋 به دنیای سیلندر علوی خوش اومدین!<br>
       چه چیزی نیاز دارید؟
       <div class="mt-2 flex flex-wrap gap-2">
-        <button onclick="quickSearch('موتور ۴۰۵')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">موتور ۴۰۵</button>
-        <button onclick="quickSearch('نیسان')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">نیسان</button>
-        <button onclick="quickSearch('۲۰۶')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">پژو ۲۰۶</button>
-        <button onclick="quickSearch('پراید')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">پراید</button>
+        <button onclick="quickSearch('سرسیلندر')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">سرسیلندر</button>
+        <button onclick="quickSearch('سیلندر')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">سیلندر</button>
+        <button onclick="quickSearch('موتور کامل')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">موتور کامل</button>
+        <button onclick="quickSearch('نیم موتور')" class="bg-purple-600 text-white px-3 py-1 rounded text-sm">نیم موتور</button>
       </div>
     `);
   }
@@ -90,7 +50,7 @@ function quickSearch(key) {
   sendMessage();
 }
 
-/* ---------- جستجوی هوشمند (همه‌کلمه‌ای + نرمال‌سازی فارسی) ---------- */
+/* ---------- جستجوی هوشمند (جزئی‌واژه + نرمال‌سازی فارسی) ---------- */
 function sendMessage() {
   const inp = document.getElementById('chat-input');
   let q = inp.value.trim().toLowerCase();
@@ -100,11 +60,11 @@ function sendMessage() {
   appendChat('user', `<b>شما:</b> ${inp.value}`);
   inp.value = '';
 
-  const found = products.filter(r =>
-    r.name.toLowerCase().includes(q) ||
-    r.model.toLowerCase().includes(q) ||
-    r.description.toLowerCase().includes(q)
-  );
+  /* جستجوی جزئی‌واژه در نام+مدل+توضیح */
+  const found = products.filter(r => {
+    const hay = (r.name + ' ' + r.model + ' ' + r.description).toLowerCase();
+    return q.split(' ').every(word => hay.includes(word));
+  });
 
   if (found.length) {
     const groups = {};
