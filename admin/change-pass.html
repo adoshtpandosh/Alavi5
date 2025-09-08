@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>تغییر رمز ادمین</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/vazir.css">
+  <style>body{font-family:Vazir,system-ui;}</style>
+</head>
+
+<body class="bg-slate-100 flex items-center justify-center h-screen">
+<script>if(!localStorage.getItem('admin')) location.href='login.html';</script>
+
+<form class="bg-white p-8 rounded-xl shadow space-y-4" onsubmit="changePass(event)">
+  <h1 class="text-xl font-bold text-center">تغییر رمز عبور</h1>
+  <input id="oldPass" type="password" placeholder="رمز فعلی" required class="border px-3 py-2 rounded w-full">
+  <input id="newPass" type="password" placeholder="رمز جدید" required class="border px-3 py-2 rounded w-full">
+  <button class="bg-purple-600 text-white w-full py-2 rounded">ذخیره</button>
+</form>
+
+<script>
+async function changePass(e){
+  e.preventDefault();
+  const oldP = document.getElementById('oldPass').value;
+  const newP = document.getElementById('newPass').value;
+  const res = await fetch('../api/change-pass.php',{
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({oldPass:oldP,newPass:newP})
+  });
+  const data = await res.json();
+  alert(data.message || 'انجام شد');
+  if(data.success) localStorage.clear(), location.href='login.html';
+}
+</script>
+</body>
+</html>
