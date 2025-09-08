@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <title>پنل ادمین - دنیای سیلندر علوی</title>
+  <title>پنل مدیریت - دنیای سیلندر علوی</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="../css/vazir.css">
@@ -17,7 +17,7 @@
 </header>
 
 <main class="container mx-auto p-4 space-y-8">
-  <!-- آپلود فایل جدید -->
+  <!-- آپلود اکسل -->
   <section class="bg-white rounded-xl shadow p-6">
     <h2 class="text-lg font-bold mb-3 text-purple-700">آپلود فایل اکسل جدید</h2>
     <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" class="mb-3">
@@ -25,7 +25,7 @@
     <p id="msgExcel" class="mt-2 text-sm"></p>
   </section>
 
-  <!-- ویرایشگر متن درباره‌ما -->
+  <!-- ویرایش متن درباره‌ما -->
   <section class="bg-white rounded-xl shadow p-6">
     <h2 class="text-lg font-bold mb-3 text-purple-700">ویرایش متن درباره ما</h2>
     <textarea id="aboutEditor" rows="8" class="w-full border rounded p-2 text-sm"></textarea>
@@ -49,9 +49,7 @@ function saveAbout() {
     body: 'text=' + encodeURIComponent(text)
   })
   .then(r => r.json())
-  .then(res => {
-    document.getElementById('msgAbout').textContent = res.message || 'ذخیره شد';
-  });
+  .then(res => document.getElementById('msgAbout').textContent = res.message || 'ذخیره شد');
 }
 
 /* ---------- آپلود اکسل ---------- */
@@ -67,9 +65,7 @@ function uploadExcel() {
 
   fetch('../api/save-excel.php',{method:'POST',body:form})
     .then(r => r.json())
-    .then(res => {
-      msg.textContent = res.message || 'آپلود و جایگزین شد';
-    });
+    .then(res => msg.textContent = res.message || 'آپلود و جایگزین شد');
 }
 </script>
 </body>
